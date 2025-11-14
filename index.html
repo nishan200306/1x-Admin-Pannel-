@@ -4,28 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All-in-One Admin Panel</title>
-    <!-- සියලුම CSS Libraries සහ Fonts -->
+    <!-- CSS Libraries සහ Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Parse SDK -->
     <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
 
     <style>
-        /* --- General App Styles (සියලුම පිටු වලට පොදු) --- */
-        :root { --primary-color: #29abe2; --success-color: #28a745; --danger-color: #dc3545; --dark-color: #1e2a39; --light-gray: #f0f2f5; }
+        /* General App Styles */
+        :root { --primary-color: #29abe2; --success-color: #28a745; --danger-color: #dc3545; --dark-color: #1e2a39; --light-gray: #f0f2f5; --purple-color: #6f42c1; --blue-color: #007bff; }
         body { font-family: 'Roboto', sans-serif; background-color: var(--light-gray); margin: 0; padding: 0; color: #333; }
         main { padding: 20px; display: flex; justify-content: center; }
         .app-header { background-color: var(--dark-color); padding: 0 20px; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
         .navbar { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 60px; }
-        .navbar-brand { color: #fff; font-size: 22px; font-weight: 700; text-decoration: none; }
+        .navbar-brand { color: #fff; font-size: 22px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .navbar-logo { height: 40px; width: auto; }
         .nav-links { margin-left: auto; display: flex; gap: 10px; }
         .nav-links button { background: none; border: none; color: #c1d1e8; padding: 10px 15px; cursor: pointer; font-size: 16px; border-radius: 5px; transition: background-color .3s,color .3s; }
         .nav-links button:hover, .nav-links button.active { background-color: var(--primary-color); color: #fff; }
-        
-        /* ටැබ් අන්තර්ගතය පාලනය කරන Style එක */
         .page-content { display: none; width: 100%;}
-
-        /* --- Combined Styles from All Files (ඔබේ ෆයිල් 3න්ම ගත් CSS) --- */
         .container { max-width: 700px; width: 100%; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); box-sizing: border-box; }
         h1, h2 { text-align: center; color: var(--dark-color); }
         h1 { margin-top: 0; margin-bottom: 25px; }
@@ -33,84 +30,58 @@
         .form-group { margin-bottom: 15px; position: relative; }
         label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; }
         input, select { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        .btn, button.submit-btn, button#search-btn, button.update-btn, button#profit-update-btn, #search-btn-dc, .nav-btn { width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
-        button.submit-btn, .action-row button { background-color: var(--success-color); }
-        button.btn-secondary { background-color: #6c757d; }
-        .btn:hover, button:hover { opacity: 0.9; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; background-color: var(--primary-color); color: #fff; }
+        
+        /* =================================================================== */
+        /*   <<<<<<<<<<<<<< START: බොත්තම් සඳහා නිවැරදි කළ CSS >>>>>>>>>>>>>>>>>  */
+        /* =================================================================== */
+        .submit-btn, .action-row button { 
+            background-color: var(--primary-color); /* කොළ පාට වෙනුවට නිල් පාට යොදන ලදී */
+        }
+        /* =================================================================== */
+        /*   <<<<<<<<<<<<<<<<<<<<<<<<<<<<< END >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   */
+        /* =================================================================== */
+
+        .btn-secondary { background-color: #6c757d; }
+        button:hover { opacity: 0.9; }
         button:disabled { background-color:#6c757d; cursor:not-allowed; }
-        .message, #status-message, #success-message { text-align: center; margin-top: 15px; font-weight: 500; padding: 10px; border-radius: 5px; display: none; }
-        .message.success, #status-message.success, #success-message-partners.success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
-        .message.error, #status-message.error, #success-message-partners.error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .message { text-align: center; margin-top: 15px; font-weight: 500; padding: 10px; border-radius: 5px; display: none; }
+        .message.success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .message.error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
         hr { border: 0; height: 1px; background-color: #e9ecef; margin: 30px 0; }
         .form-group .error-text{ color: var(--danger-color); font-size:12px; margin-top:4px; min-height:1em; }
-        
-        /* Specific Styles */
-        #accounts-list, #promo-list { list-style: none; padding: 0; margin: 0; }
-        .account-card { background:#f8f9fa; padding:15px 20px; border-radius:6px; border-left:5px solid #007bff; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,.05); margin-bottom: 10px; }
-        .edit-details-btn, .delete-btn { background: none; border: none; cursor: pointer; padding: 5px; }
-        .edit-details-btn { font-size: 20px; color: #6c757d; } .edit-details-btn:hover { color: #007bff; }
-        .delete-btn { font-size: 18px; color: var(--danger-color); } .delete-btn:hover { color: #a71d2a; }
+        #accounts-list, #promo-list-pc { list-style: none; padding: 0; margin: 0; }
+        .account-card { background:#f8f9fa; padding:15px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,.05); margin-bottom: 10px; border-left: 5px solid; transition: border-color 0.3s; }
+        .account-card.status-active { border-left-color: var(--blue-color); }
+        .account-card.status-inactive { border-left-color: var(--purple-color); }
+        .account-card-info { flex-grow: 1; }
+        .account-card-controls { display: flex; align-items: center; gap: 15px; }
+        .edit-details-btn { font-size: 20px; color: #6c757d; cursor: pointer; } .edit-details-btn:hover { color: #007bff; }
+        .delete-btn { font-size: 18px; color: var(--danger-color); cursor: pointer; background: none; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--blue-color); }
+        input:not(:checked) + .slider { background-color: var(--purple-color); }
+        input:checked + .slider:before { transform: translateX(24px); }
         .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,.6); }
         .modal-content { background-color:#fefefe; margin:10% auto; padding:20px; border:1px solid #888; width:90%; max-width:500px; border-radius:8px; position:relative; }
         .close-btn { color:#aaa; position:absolute; top:10px; right:20px; font-size:28px; font-weight:700; cursor:pointer; }
-        .search-section, .update-section, .section { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .action-row { display: flex; align-items: center; gap: 10px; }
-        .action-row select { width: 120px; } .action-row input { flex-grow: 1; } .action-row button { width: auto; padding: 12px 15px; }
         #search-container { position:relative; } #search-container .fa-search { position:absolute; left:15px; top:15px; color:#6c757d; }
         #search-input { padding-left: 40px; }
-        #search-btn-dc, #add-promo-form .btn, #search-promo-form .btn { background-color: var(--primary-color); }
-
-        /* ======================================================= */
-        /*          Mobile Responsive Styles (ජංගම දුරකථන සඳහා)    */
-        /* ======================================================= */
+        .search-section, .update-section, .section { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+        .section:last-child { border-bottom: none; }
+        .action-row { display: flex; align-items: center; gap: 10px; }
+        .action-row select { width: 120px; } .action-row input { flex-grow: 1; }
         @media (max-width: 768px) {
-            body {
-                padding: 0; /* body එකේ දෙපස තිබූ අනවශ්‍ය හිස් ඉඩ ඉවත් කරයි */
-            }
-
-            main {
-                padding: 0; /* ප්‍රධාන අන්තර්ගතය වටේ ඉඩ ඉවත් කරයි, container එක එය බලාගනීවි */
-            }
-
-            .container {
-                padding: 20px 15px; /* උඩ/යට 20px, දෙපස 15px ඉඩක් */
-                box-shadow: none; /* කුඩා තිරයේදී shadow ඉවත් කරයි */
-                border-radius: 0; /* තිරය පුරාම පෙනීමට */
-                min-height: calc(100vh - 120px); /* තිරයේ උසට සරිලන ලෙස */
-            }
-
-            .navbar {
-                flex-direction: column; /* Navigation එක උඩ සිට පහලට සකසයි */
-                height: auto; /* උස ස්වයංක්‍රීයව සකසයි */
-                padding: 10px 0;
-            }
-
-            .nav-links {
-                margin-left: 0;
-                margin-top: 10px; /* Brand එකයි බොත්තම් ටිකයි අතර ඉඩක් */
-                width: 100%;
-                justify-content: center; /* බොත්තම් ටික මැදට ගනී */
-                flex-wrap: wrap; /* ඉඩ මදි නම් බොත්තම් පේලි දෙකකට කඩයි */
-            }
-            
-            .nav-links button {
-                font-size: 13px; /* බොත්තම් වල අකුරු ප්‍රමාණය අඩු කරයි */
-                padding: 8px 10px;
-            }
-
-            .action-row {
-                flex-wrap: wrap; /* Data Control පිටුවේ button එක ඉඩ මදි වූ විට පහල පේලියට දමයි */
-                gap: 8px;
-            }
-
-            h1 {
-                font-size: 24px; /* Title එකේ ප්‍රමාණය අඩු කරයි */
-            }
-
-            h2 {
-                font-size: 18px;
-            }
+            body, main { padding: 0; }
+            .container { padding: 20px 15px; box-shadow: none; border-radius: 0; min-height: calc(100vh - 120px); }
+            .navbar { flex-direction: column; height: auto; padding: 10px 0; }
+            .nav-links { margin-left: 0; margin-top: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
+            .nav-links button { font-size: 13px; padding: 8px 10px; }
+            .action-row, .account-card-controls { flex-wrap: wrap; gap: 8px; }
+            h1 { font-size: 24px; } h2 { font-size: 18px; }
         }
     </style>
 </head>
@@ -118,7 +89,10 @@
 
     <header class="app-header">
         <nav class="navbar">
-            <a href="#" class="navbar-brand">Admin Panel</a>
+            <a href="#" class="navbar-brand">
+                <img src="https://i.postimg.cc/0jwDg51t/1001086315.png" alt="Admin Logo" class="navbar-logo">
+                <span>Admin Panel</span>
+            </a>
             <div class="nav-links">
                 <button class="nav-btn active" data-page="page-partners">Partner Accounts</button>
                 <button class="nav-btn" data-page="page-data-control">Data Control</button>
@@ -128,9 +102,7 @@
     </header>
 
     <main id="app-content">
-        <!-- =================================================================== -->
-        <!-- PAGE 1: Partner Accounts                                          -->
-        <!-- =================================================================== -->
+        <!-- PAGE 1: Partner Accounts -->
         <div id="page-partners" class="page-content" style="display: block;">
              <div class="container">
                 <h1>Partner Account Activation</h1>
@@ -144,7 +116,7 @@
                     <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" required><small class="error-text"></small></div>
                     <div class="form-group"><label for="commission">Commission (%)</label><input type="number" id="commission" step="0.01" required><small class="error-text"></small></div>
                     <div class="form-group"><label for="promo-code">Promo Code</label><input type="text" id="promo-code" required><small class="error-text"></small></div>
-                    <button type="submit" class="submit-btn" id="submit-btn-text">Activate Account</button>
+                    <button type="submit" class="submit-btn">Activate Account</button>
                 </form>
                 <hr>
                 <h2>Activated Accounts</h2>
@@ -162,58 +134,22 @@
             </div>
         </div>
 
-        <!-- =================================================================== -->
-        <!-- PAGE 2: Data Control                                              -->
-        <!-- =================================================================== -->
+        <!-- PAGE 2: Data Control -->
         <div id="page-data-control" class="page-content">
             <div class="container">
                 <h1>Admin Control Panel</h1>
-                <div class="search-section">
-                    <div class="form-group">
-                        <label for="aff-id-input-dc">Affiliate ID</label>
-                        <input type="text" id="aff-id-input-dc" placeholder="Enter Aff ID to search">
-                    </div>
-                    <button id="search-btn-dc">Search User</button>
-                </div>
-                <div id="update-form-container-dc" style="display: none;">
-                    <div id="user-info-dc" style="font-size: 18px; font-weight: bold; color: #007bff; margin-bottom: 20px; text-align: center;"></div>
-                    <div class="update-section">
-                        <div class="update-row"><label>Registrations</label><div class="action-row"><input type="number" id="registrations-input" placeholder="Set new value"><button class="update-btn" data-field="registrations" data-input="registrations-input">Update</button></div></div>
-                        <div class="update-row"><label>Registrations with deposits</label><div class="action-row"><input type="number" id="reg-deposits-input" placeholder="Set new value"><button class="update-btn" data-field="regWithDeposits" data-input="reg-deposits-input">Update</button></div></div>
-                        <div class="update-row"><label>Update Profit</label><div class="action-row"><select id="profit-op-select"><option value="add">Add (+)</option><option value="subtract">Subtract (-)</option></select><input type="number" id="profit-amount-input" placeholder="Amount"><button id="profit-update-btn">Update</button></div></div>
-                    </div>
-                </div>
+                <div class="search-section"><div class="form-group"><label for="aff-id-input-dc">Affiliate ID</label><input type="text" id="aff-id-input-dc" placeholder="Enter Aff ID to search"></div><button id="search-btn-dc" class="btn">Search User</button></div>
+                <div id="update-form-container-dc" style="display: none;"><div id="user-info-dc" class="message" style="background: none; color: var(--primary-color); font-weight: bold; font-size: 18px;"></div><div class="update-section"><div class="update-row"><label>Registrations</label><div class="action-row"><input type="number" id="registrations-input-dc" placeholder="Set new value"><button class="update-btn" data-field="registrations" data-input="registrations-input-dc">Update</button></div></div><div class="update-row"><label>Registrations with deposits</label><div class="action-row"><input type="number" id="reg-deposits-input-dc" placeholder="Set new value"><button class="update-btn" data-field="regWithDeposits" data-input="reg-deposits-input-dc">Update</button></div></div><div class="update-row"><label>Update Profit</label><div class="action-row"><select id="profit-op-select-dc"><option value="add">Add (+)</option><option value="subtract">Subtract (-)</option></select><input type="number" id="profit-amount-input-dc" placeholder="Amount"><button id="profit-update-btn-dc">Update</button></div></div></div></div>
                 <div id="status-message-dc" class="message"></div>
             </div>
         </div>
 
-        <!-- =================================================================== -->
-        <!-- PAGE 3: Promo Codes                                               -->
-        <!-- =================================================================== -->
+        <!-- PAGE 3: Promo Codes -->
         <div id="page-promo-codes" class="page-content">
             <div class="container">
                 <h1>Promo Code Admin Panel</h1>
-                <div class="section">
-                    <h2>Add New Promo Code</h2>
-                    <form id="add-promo-form">
-                        <div class="form-group"><label for="add-aff-id">Partner AFF ID</label><input type="text" id="add-aff-id" placeholder="e.g., 123456" required></div>
-                        <div class="form-group"><label for="add-promo-code">New Promo Code</label><input type="text" id="add-promo-code" placeholder="e.g., MYPROMO25" required></div>
-                        <button type="submit" class="btn">Add Promo Code</button>
-                    </form>
-                    <p id="add-message-box" class="message"></p>
-                </div>
-                <div class="section">
-                    <h2>Manage Existing Promo Codes</h2>
-                    <form id="search-promo-form">
-                        <div class="form-group"><label for="search-aff-id-pc">Search by AFF ID</label><input type="text" id="search-aff-id-pc" placeholder="Enter AFF ID to find codes" required></div>
-                        <button type="submit" class="btn btn-secondary">Search Promo Codes</button>
-                    </form>
-                    <p id="search-message-box" class="message"></p>
-                    <div id="promo-list-container" style="display:none;">
-                        <h3>Codes for AFF ID: <span id="user-info-pc"></span></h3>
-                        <ul id="promo-list"></ul>
-                    </div>
-                </div>
+                <div class="section"><h2>Add New Promo Code</h2><form id="add-promo-form"><div class="form-group"><label for="add-aff-id-pc">Partner AFF ID</label><input type="text" id="add-aff-id-pc" placeholder="e.g., 123456" required></div><div class="form-group"><label for="add-promo-code-pc">New Promo Code</label><input type="text" id="add-promo-code-pc" placeholder="e.g., MYPROMO25" required></div><button type="submit" class="btn">Add Promo Code</button></form><p id="add-message-box-pc" class="message"></p></div>
+                <div class="section"><h2>Manage Existing Promo Codes</h2><form id="search-promo-form"><div class="form-group"><label for="search-aff-id-pc">Search by AFF ID</label><input type="text" id="search-aff-id-pc" placeholder="Enter AFF ID to find codes" required></div><button type="submit" class="btn btn-secondary">Search Promo Codes</button></form><p id="search-message-box-pc" class="message"></p><div id="promo-list-container-pc" style="display:none;"><h3>Codes for AFF ID: <span id="user-info-pc"></span></h3><ul id="promo-list-pc"></ul></div></div>
             </div>
         </div>
     </main>
@@ -230,304 +166,44 @@
         // --- 2. NAVIGATION (TAB) LOGIC ---
         const navButtons = document.querySelectorAll('.nav-btn');
         const pages = document.querySelectorAll('.page-content');
-
-        navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                pages.forEach(page => page.style.display = 'none');
-                navButtons.forEach(btn => btn.classList.remove('active'));
-                const targetPage = document.getElementById(button.getAttribute('data-page'));
-                if (targetPage) targetPage.style.display = 'block';
-                button.classList.add('active');
-            });
-        });
+        navButtons.forEach(button => { button.addEventListener('click', () => { pages.forEach(page => page.style.display = 'none'); navButtons.forEach(btn => btn.classList.remove('active')); document.getElementById(button.getAttribute('data-page')).style.display = 'block'; button.classList.add('active'); }); });
 
         // --- 3. PAGE-SPECIFIC JAVASCRIPT SETUP ---
-        
-        // ======================= Setup for Page 1: Partner Accounts =======================
         function setupPartnersPage() {
-            const page = document.getElementById('page-partners');
-            if (!page) return;
-            const activationForm = page.querySelector('#activation-form');
-            const accountsList = page.querySelector('#accounts-list');
-            const searchInput = page.querySelector('#search-input');
-            const modal = page.querySelector('#edit-modal');
-            const modalBody = page.querySelector('#modal-body');
-            const closeModalBtn = page.querySelector('.close-btn');
-            const successMsg = page.querySelector('#success-message-partners');
+            const page = document.getElementById('page-partners'); if (!page) return;
+            const activationForm = page.querySelector('#activation-form'), accountsList = page.querySelector('#accounts-list'), searchInput = page.querySelector('#search-input'), modal = page.querySelector('#edit-modal'), modalBody = page.querySelector('#modal-body'), closeModalBtn = page.querySelector('.close-btn'), successMsg = page.querySelector('#success-message-partners');
             let allAccounts = [];
-
-            const showMessage = (text, type = 'success') => {
-                successMsg.textContent = text;
-                successMsg.className = `message ${type}`;
-                successMsg.style.display = 'block';
-                setTimeout(() => { successMsg.style.display = 'none' }, 4000);
-            };
-
-            async function fetchAndRenderAccounts() {
-                accountsList.innerHTML = '<p>Loading accounts...</p>';
-                try {
-                    const results = await new Parse.Query(PartnerAccount).descending("createdAt").find();
-                    allAccounts = results;
-                    displayAccounts(results);
-                } catch (error) { accountsList.innerHTML = '<p style="color: red;">Could not load accounts.</p>'; }
-            }
-
-            function displayAccounts(accountsToDisplay) {
-                accountsList.innerHTML = accountsToDisplay.length === 0 ? '<p>No accounts found.</p>' : '';
-                accountsToDisplay.forEach(account => {
-                    const card = document.createElement('div');
-                    card.className = 'account-card';
-                    card.innerHTML = `<div class="account-card-info"><strong>Aff ID: ${account.get('affId')}</strong><br><span>Commission: ${account.get('commission')}%</span></div><i class="fas fa-edit edit-details-btn" data-id="${account.id}"></i>`;
-                    accountsList.appendChild(card);
-                });
-            }
-
-            activationForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('button[type="submit"]');
-                submitBtn.disabled = true; submitBtn.textContent = 'Activating...';
-                
-                activationForm.querySelectorAll('.error-text').forEach(el => el.textContent = '');
-                const data = {
-                    affId: activationForm.querySelector('#aff-id').value.trim(),
-                    password: activationForm.querySelector('#password').value,
-                    firstName: activationForm.querySelector('#first-name').value.trim(),
-                    lastName: activationForm.querySelector('#last-name').value.trim(),
-                    email: activationForm.querySelector('#email').value.trim(),
-                    phone: activationForm.querySelector('#phone').value.trim(),
-                    commission: parseFloat(activationForm.querySelector('#commission').value),
-                    promoCode: activationForm.querySelector('#promo-code').value.trim(),
-                };
-
-                let hasError = false;
-                const orQuery = Parse.Query.or(
-                    new Parse.Query(PartnerAccount).equalTo("affId", data.affId),
-                    new Parse.Query(PartnerAccount).equalTo("email", data.email),
-                    new Parse.Query(PartnerAccount).equalTo("phone", data.phone),
-                    new Parse.Query(PartnerAccount).equalTo("promoCode", data.promoCode)
-                );
-                
-                try {
-                    const duplicate = await orQuery.first();
-                    if (duplicate) {
-                        if (duplicate.get('affId') === data.affId) { activationForm.querySelector('#aff-id').nextElementSibling.textContent = 'Already in use'; hasError = true; }
-                        if (duplicate.get('email') === data.email) { activationForm.querySelector('#email').nextElementSibling.textContent = 'Already in use'; hasError = true; }
-                        if (duplicate.get('phone') === data.phone) { activationForm.querySelector('#phone').nextElementSibling.textContent = 'Already in use'; hasError = true; }
-                        if (duplicate.get('promoCode') === data.promoCode) { activationForm.querySelector('#promo-code').nextElementSibling.textContent = 'Already in use'; hasError = true; }
-                    }
-                    if (hasError) {
-                        submitBtn.disabled = false; submitBtn.textContent = 'Activate Account';
-                        return;
-                    }
-                    await new PartnerAccount().save(data);
-                    showMessage(`Account for ${data.affId} activated successfully!`, 'success');
-                    activationForm.reset();
-                    fetchAndRenderAccounts();
-                } catch (error) {
-                    showMessage(`Error: ${error.message}`, 'error');
-                } finally {
-                    submitBtn.disabled = false; submitBtn.textContent = 'Activate Account';
-                }
-            });
-            
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const filtered = allAccounts.filter(acc => acc.get('affId').toLowerCase().includes(searchTerm));
-                displayAccounts(filtered);
-            });
-            
-            accountsList.addEventListener('click', (e) => {
-                if (e.target.classList.contains('edit-details-btn')) {
-                    const account = allAccounts.find(acc => acc.id === e.target.getAttribute('data-id'));
-                    if(account) showEditModal(account);
-                }
-            });
-
-            function showEditModal(account) {
-                 modalBody.innerHTML = `<form id="edit-form" data-id="${account.id}" novalidate><h3>Edit Account: ${account.get('affId')}</h3>` +
-                    `<div class="form-group"><label>Password</label><input type="text" id="edit-password" value="${account.get('password') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>First Name</label><input type="text" id="edit-first-name" value="${account.get('firstName') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>Last Name</label><input type="text" id="edit-last-name" value="${account.get('lastName') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>Email</label><input type="email" id="edit-email" value="${account.get('email') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>Phone</label><input type="tel" id="edit-phone" value="${account.get('phone') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>Commission</label><input type="number" id="edit-commission" value="${account.get('commission') || 0}" required><small class="error-text"></small></div>` +
-                    `<div class="form-group"><label>Promo Code</label><input type="text" id="edit-promo-code" value="${account.get('promoCode') || ''}" required><small class="error-text"></small></div>` +
-                    `<div class="modal-buttons"><button type="submit" id="save-changes-btn" class="submit-btn">Save Changes</button></div></form>`;
-                modal.style.display = 'block';
-            }
-
-            modal.addEventListener('submit', async (e) => {
-                 if (e.target.id === 'edit-form') {
-                    e.preventDefault();
-                    // Full modal save logic from your first file...
-                    showMessage('Details updated!', 'success');
-                    modal.style.display = 'none';
-                    await fetchAndRenderAccounts();
-                 }
-            });
-
-            closeModalBtn.onclick = () => { modal.style.display = 'none'; };
-            window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
-
+            const showMessage = (text, type = 'success') => { successMsg.textContent = text; successMsg.className = `message ${type}`; successMsg.style.display = 'block'; setTimeout(() => { successMsg.style.display = 'none' }, 4000); };
+            async function fetchAndRenderAccounts() { accountsList.innerHTML = '<p>Loading accounts...</p>'; try { const results = await new Parse.Query(PartnerAccount).descending("createdAt").find(); allAccounts = results; displayAccounts(results); } catch (error) { showMessage('Could not load accounts.', 'error'); } }
+            function displayAccounts(accountsToDisplay) { accountsList.innerHTML = accountsToDisplay.length === 0 ? '<p>No accounts found.</p>' : ''; accountsToDisplay.forEach(account => { const card = document.createElement('div'); card.className = 'account-card'; const status = account.get('accountStatus') || 'inactive'; card.classList.add(status === 'active' ? 'status-active' : 'status-inactive'); const isChecked = status === 'active' ? 'checked' : ''; card.innerHTML = `<div class="account-card-info"><strong>Aff ID: ${account.get('affId')}</strong><br><span>Commission: ${account.get('commission')}%</span></div><div class="account-card-controls"><label class="switch" title="Toggle Status (Purple: Inactive, Blue: Active)"><input type="checkbox" class="status-toggle" data-id="${account.id}" ${isChecked}><span class="slider"></span></label><i class="fas fa-edit edit-details-btn" data-id="${account.id}" title="Edit Details"></i></div>`; accountsList.appendChild(card); }); }
+            activationForm.addEventListener('submit', async (e) => { e.preventDefault(); const submitBtn = e.target.querySelector('button'); submitBtn.disabled = true; submitBtn.textContent = 'Activating...'; activationForm.querySelectorAll('.error-text').forEach(el => el.textContent = ''); const data = { affId: activationForm.querySelector('#aff-id').value.trim(), password: activationForm.querySelector('#password').value, firstName: activationForm.querySelector('#first-name').value.trim(), lastName: activationForm.querySelector('#last-name').value.trim(), email: activationForm.querySelector('#email').value.trim(), phone: activationForm.querySelector('#phone').value.trim(), commission: parseFloat(activationForm.querySelector('#commission').value), promoCode: activationForm.querySelector('#promo-code').value.trim(), accountStatus: 'inactive' }; try { await new PartnerAccount().save(data); showMessage(`Account for ${data.affId} activated successfully!`, 'success'); activationForm.reset(); fetchAndRenderAccounts(); } catch(error) { showMessage('Error activating account: ' + error.message, 'error'); } finally { submitBtn.disabled = false; submitBtn.textContent = 'Activate Account'; } });
+            searchInput.addEventListener('input', (e) => { const searchTerm = e.target.value.toLowerCase(); const filtered = allAccounts.filter(acc => acc.get('affId').toLowerCase().includes(searchTerm)); displayAccounts(filtered); });
+            accountsList.addEventListener('change', async (e) => { if (e.target.classList.contains('status-toggle')) { const toggle = e.target; const accountId = toggle.getAttribute('data-id'); const newStatus = toggle.checked ? 'active' : 'inactive'; const card = toggle.closest('.account-card'); card.classList.remove('status-active', 'status-inactive'); card.classList.add(newStatus === 'active' ? 'status-active' : 'status-inactive'); try { const accountToUpdate = new Parse.Object("PartnerAccount"); accountToUpdate.id = accountId; accountToUpdate.set('accountStatus', newStatus); await accountToUpdate.save(); showMessage(`Status updated to ${newStatus}.`, 'success'); } catch (error) { showMessage('Failed to update status.', 'error'); toggle.checked = !toggle.checked; card.classList.remove('status-active', 'status-inactive'); card.classList.add(newStatus === 'active' ? 'status-inactive' : 'status-active'); } } });
+            accountsList.addEventListener('click', (e) => { if (e.target.closest('.edit-details-btn')) { const account = allAccounts.find(acc => acc.id === e.target.closest('.edit-details-btn').getAttribute('data-id')); if(account) showEditModal(account); } });
+            function showEditModal(account) { modalBody.innerHTML = `<form id="edit-form" data-id="${account.id}" novalidate><h3>Edit Account: ${account.get('affId')}</h3><div class="form-group"><label>Password</label><input type="text" id="edit-password" value="${account.get('password') || ''}" required><small class="error-text"></small></div><div class="form-group"><label>First Name</label><input type="text" id="edit-first-name" value="${account.get('firstName') || ''}" required><small class="error-text"></small></div><div class="form-group"><label>Last Name</label><input type="text" id="edit-last-name" value="${account.get('lastName') || ''}" required><small class="error-text"></small></div><div class="form-group"><label>Email</label><input type="email" id="edit-email" value="${account.get('email') || ''}" required><small class="error-text"></small></div><div class="form-group"><label>Phone</label><input type="tel" id="edit-phone" value="${account.get('phone') || ''}" required><small class="error-text"></small></div><div class="form-group"><label>Commission (%)</label><input type="number" id="edit-commission" value="${account.get('commission') || 0}" step="0.01" required><small class="error-text"></small></div><div class="form-group"><label>Promo Code</label><input type="text" id="edit-promo-code" value="${account.get('promoCode') || ''}" required><small class="error-text"></small></div><div class="modal-buttons"><button type="submit" id="save-changes-btn" class="submit-btn">Save Changes</button></div></form>`; modal.style.display = 'block'; }
+            modal.addEventListener('submit', async (e) => { if (e.target.id === 'edit-form') { e.preventDefault(); const form = e.target; const saveBtn = form.querySelector('#save-changes-btn'); saveBtn.disabled = true; saveBtn.textContent = 'Saving...'; form.querySelectorAll('.error-text').forEach(el => el.textContent = ''); const accountId = form.getAttribute('data-id'); const newValues = { password: form.querySelector('#edit-password').value, firstName: form.querySelector('#edit-first-name').value.trim(), lastName: form.querySelector('#edit-last-name').value.trim(), email: form.querySelector('#edit-email').value.trim(), phone: form.querySelector('#edit-phone').value.trim(), commission: parseFloat(form.querySelector('#edit-commission').value), promoCode: form.querySelector('#edit-promo-code').value.trim() }; const orQuery = Parse.Query.or(new Parse.Query(PartnerAccount).equalTo("email", newValues.email), new Parse.Query(PartnerAccount).equalTo("phone", newValues.phone), new Parse.Query(PartnerAccount).equalTo("promoCode", newValues.promoCode)); orQuery.notEqualTo("objectId", accountId); let hasError = false; try { const duplicates = await orQuery.find(); if (duplicates.length > 0) { duplicates.forEach(dup => { if (dup.get('email') === newValues.email) { form.querySelector('#edit-email').nextElementSibling.textContent = 'Already in use'; hasError = true; } if (dup.get('phone') === newValues.phone) { form.querySelector('#edit-phone').nextElementSibling.textContent = 'Already in use'; hasError = true; } if (dup.get('promoCode') === newValues.promoCode) { form.querySelector('#edit-promo-code').nextElementSibling.textContent = 'Already in use'; hasError = true; } }); } if (hasError) throw new Error("Duplicate values found."); const accountToUpdate = await new Parse.Query(PartnerAccount).get(accountId); for (const key in newValues) { accountToUpdate.set(key, newValues[key]); } await accountToUpdate.save(); modal.style.display = 'none'; showMessage('Account updated successfully!', 'success'); await fetchAndRenderAccounts(); } catch (error) { showMessage('Error: ' + error.message, 'error'); } finally { saveBtn.disabled = false; saveBtn.textContent = 'Save Changes'; } } });
+            closeModalBtn.onclick = () => { modal.style.display = 'none'; }; window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
             fetchAndRenderAccounts();
         }
-
-        // ======================= Setup for Page 2: Data Control =======================
         function setupDataControlPage() {
-            const page = document.getElementById('page-data-control');
-            if(!page) return;
+            const page = document.getElementById('page-data-control'); if(!page) return;
             let currentUserObjectId = null;
-            const searchBtn = page.querySelector('#search-btn-dc');
-            const affIdInput = page.querySelector('#aff-id-input-dc');
-            const updateFormContainer = page.querySelector('#update-form-container-dc');
-            const userInfo = page.querySelector('#user-info-dc');
-            const statusMessage = page.querySelector('#status-message-dc');
-            
-            const showStatus = (message, isError = false) => {
-                statusMessage.textContent = message;
-                statusMessage.className = `message ${isError ? 'error' : 'success'}`;
-                statusMessage.style.display = 'block';
-                setTimeout(() => { statusMessage.style.display = 'none'; }, 4000);
-            };
-
-            searchBtn.addEventListener('click', async () => {
-                const affId = affIdInput.value.trim();
-                if (!affId) return showStatus("Please enter an Affiliate ID.", true);
-                try {
-                    const user = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first();
-                    if (user) {
-                        currentUserObjectId = user.id;
-                        userInfo.textContent = `Editing: ${user.get('firstName') || ''} (ID: ${user.get('affId')})`;
-                        page.querySelector('#registrations-input').value = user.get('registrations') || 0;
-                        page.querySelector('#reg-deposits-input').value = user.get('regWithDeposits') || 0;
-                        page.querySelector('#profit-amount-input').value = '';
-                        updateFormContainer.style.display = 'block';
-                        showStatus("User found.", false);
-                    } else {
-                        updateFormContainer.style.display = 'none';
-                        showStatus("No user found with that Affiliate ID.", true);
-                    }
-                } catch (error) { showStatus("An error occurred during search.", true); }
-            });
-
-            page.querySelectorAll('.update-btn').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    if (!currentUserObjectId) return showStatus("Please search for a user first.", true);
-                    const field = e.target.getAttribute('data-field');
-                    const value = parseFloat(page.querySelector(`#${e.target.getAttribute('data-input')}`).value);
-                    if (isNaN(value)) return showStatus("Please enter a valid number.", true);
-                    
-                    const account = new PartnerAccount();
-                    account.id = currentUserObjectId;
-                    account.set(field, value);
-                    try {
-                        await account.save();
-                        showStatus(`'${field}' updated successfully!`, false);
-                    } catch (error) { showStatus(`Failed to update '${field}'.`, true); }
-                });
-            });
-
-            page.querySelector('#profit-update-btn').addEventListener('click', async () => {
-                if (!currentUserObjectId) return showStatus("Please search for a user first.", true);
-                let amount = parseFloat(page.querySelector('#profit-amount-input').value);
-                if (isNaN(amount)) return showStatus("Please enter a valid amount.", true);
-                if (page.querySelector('#profit-op-select').value === 'subtract') amount = -amount;
-
-                const account = new PartnerAccount();
-                account.id = currentUserObjectId;
-                account.increment('profit', amount);
-                try {
-                    await account.save();
-                    showStatus(`Profit updated successfully!`, false);
-                    page.querySelector('#profit-amount-input').value = '';
-                } catch (error) { showStatus(`Failed to update profit.`, true); }
-            });
+            const searchBtn = page.querySelector('#search-btn-dc'), affIdInput = page.querySelector('#aff-id-input-dc'), updateFormContainer = page.querySelector('#update-form-container-dc'), userInfo = page.querySelector('#user-info-dc'), statusMessage = page.querySelector('#status-message-dc');
+            const showStatus = (message, isError = false) => { statusMessage.textContent = message; statusMessage.className = `message ${isError ? 'error' : 'success'}`; statusMessage.style.display = 'block'; setTimeout(() => { statusMessage.style.display = 'none'; }, 4000); };
+            searchBtn.addEventListener('click', async () => { const affId = affIdInput.value.trim(); if (!affId) return showStatus("Please enter an Affiliate ID.", true); try { const user = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first(); if (user) { currentUserObjectId = user.id; userInfo.textContent = `Editing: ${user.get('firstName') || ''} (ID: ${user.get('affId')})`; userInfo.style.display = 'block'; page.querySelector('#registrations-input-dc').value = user.get('registrations') || 0; page.querySelector('#reg-deposits-input-dc').value = user.get('regWithDeposits') || 0; page.querySelector('#profit-amount-input-dc').value = ''; updateFormContainer.style.display = 'block'; showStatus("User found.", false); } else { updateFormContainer.style.display = 'none'; showStatus("No user found with that Affiliate ID.", true); } } catch (error) { showStatus("An error occurred during search.", true); } });
+            page.querySelectorAll('.update-btn').forEach(button => { button.addEventListener('click', async (e) => { if (!currentUserObjectId) return showStatus("Please search for a user first.", true); const field = e.target.getAttribute('data-field'); const value = parseFloat(page.querySelector(`#${e.target.getAttribute('data-input')}`).value); if (isNaN(value)) return showStatus("Please enter a valid number.", true); const account = new Parse.Object("PartnerAccount"); account.id = currentUserObjectId; account.set(field, value); try { await account.save(); showStatus(`'${field}' updated successfully!`, false); } catch (error) { showStatus(`Failed to update '${field}'.`, true); } }); });
+            page.querySelector('#profit-update-btn-dc').addEventListener('click', async () => { if (!currentUserObjectId) return showStatus("Please search for a user first.", true); let amount = parseFloat(page.querySelector('#profit-amount-input-dc').value); if (isNaN(amount)) return showStatus("Please enter a valid amount.", true); if (page.querySelector('#profit-op-select-dc').value === 'subtract') amount = -amount; const account = new Parse.Object("PartnerAccount"); account.id = currentUserObjectId; account.increment('profit', amount); try { await account.save(); showMessage(`Profit updated successfully!`, false); page.querySelector('#profit-amount-input-dc').value = ''; } catch (error) { showStatus(`Failed to update profit.`, true); } });
         }
-
-        // ======================= Setup for Page 3: Promo Codes =======================
         function setupPromoCodesPage() {
-            const page = document.getElementById('page-promo-codes');
-            if(!page) return;
-            const addForm = page.querySelector('#add-promo-form');
-            const searchForm = page.querySelector('#search-promo-form');
-            const addMessageBox = page.querySelector('#add-message-box');
-            const searchMessageBox = page.querySelector('#search-message-box');
-            const promoListContainer = page.querySelector('#promo-list-container');
-            const promoListUl = page.querySelector('#promo-list');
-            const userInfoSpan = page.querySelector('#user-info-pc');
+            const page = document.getElementById('page-promo-codes'); if(!page) return;
+            const addForm = page.querySelector('#add-promo-form'), searchForm = page.querySelector('#search-promo-form'), addMessageBox = page.querySelector('#add-message-box-pc'), searchMessageBox = page.querySelector('#search-message-box-pc'), promoListContainer = page.querySelector('#promo-list-container-pc'), promoListUl = page.querySelector('#promo-list-pc'), userInfoSpan = page.querySelector('#user-info-pc');
             let currentPartner = null;
-
-            const showMessage = (element, text, type) => {
-                element.textContent = text;
-                element.className = `message ${type}`;
-                element.style.display = 'block';
-                if (type !== 'clear') setTimeout(() => { element.style.display = 'none'; }, 4000);
-            };
-
-            addForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const affId = page.querySelector('#add-aff-id').value.trim();
-                const newPromoCode = page.querySelector('#add-promo-code').value.trim().toUpperCase();
-                if (!affId || !newPromoCode) return showMessage(addMessageBox, 'Aff ID and Promo Code are required.', 'error');
-                
-                try {
-                    const count = await new Parse.Query(PartnerAccount).equalTo("promoCodes", newPromoCode).count();
-                    if (count > 0) return showMessage(addMessageBox, 'This promo code is already in use.', 'error');
-
-                    const partner = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first();
-                    if (!partner) return showMessage(addMessageBox, 'No account found with this Aff ID.', 'error');
-                    
-                    partner.addUnique("promoCodes", newPromoCode);
-                    await partner.save();
-                    showMessage(addMessageBox, 'Promo code added successfully!', 'success');
-                    addForm.reset();
-                } catch (error) { showMessage(addMessageBox, 'An error occurred.', 'error'); }
-            });
-
-            searchForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const affId = page.querySelector('#search-aff-id-pc').value.trim();
-                if (!affId) return showMessage(searchMessageBox, 'Please enter an Aff ID to search.', 'error');
-                
-                try {
-                    const partner = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first();
-                    if (!partner) {
-                        promoListContainer.style.display = 'none';
-                        return showMessage(searchMessageBox, 'No account found with this Aff ID.', 'error');
-                    }
-                    currentPartner = partner;
-                    userInfoSpan.textContent = partner.get('affId');
-                    displayPromoCodes(partner.get('promoCodes'));
-                } catch (error) { showMessage(searchMessageBox, 'An error occurred during search.', 'error'); }
-            });
-
-            function displayPromoCodes(codes) {
-                promoListUl.innerHTML = (codes && codes.length > 0) ? '' : '<li>No promo codes found for this account.</li>';
-                if (codes) {
-                    codes.forEach(code => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<span>${code}</span><button class="delete-btn" data-code="${code}"><i class="fas fa-trash-alt"></i></button>`;
-                        promoListUl.appendChild(li);
-                    });
-                }
-                promoListContainer.style.display = 'block';
-                promoListUl.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
-            }
-
-            async function handleDelete(e) {
-                const codeToDelete = e.currentTarget.getAttribute('data-code');
-                if (!currentPartner || !confirm(`Delete "${codeToDelete}"?`)) return;
-                
-                currentPartner.remove("promoCodes", codeToDelete);
-                try {
-                    await currentPartner.save();
-                    showMessage(searchMessageBox, `"${codeToDelete}" was deleted.`, 'success');
-                    displayPromoCodes(currentPartner.get('promoCodes'));
-                } catch (error) { showMessage(searchMessageBox, 'Failed to delete promo code.', 'error'); }
-            }
+            const showMessage = (element, text, type) => { element.textContent = text; element.className = `message ${type}`; element.style.display = 'block'; if (type !== 'clear') setTimeout(() => { element.style.display = 'none'; }, 4000); };
+            addForm.addEventListener('submit', async (e) => { e.preventDefault(); const affId = page.querySelector('#add-aff-id-pc').value.trim(); const newPromoCode = page.querySelector('#add-promo-code-pc').value.trim().toUpperCase(); if (!affId || !newPromoCode) return showMessage(addMessageBox, 'Aff ID and Promo Code are required.', 'error'); try { const count = await new Parse.Query(PartnerAccount).equalTo("promoCodes", newPromoCode).count(); if (count > 0) return showMessage(addMessageBox, 'This promo code is already in use.', 'error'); const partner = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first(); if (!partner) return showMessage(addMessageBox, 'No account found with this Aff ID.', 'error'); partner.addUnique("promoCodes", newPromoCode); await partner.save(); showMessage(addMessageBox, 'Promo code added successfully!', 'success'); addForm.reset(); } catch (error) { showMessage(addMessageBox, 'An error occurred.', 'error'); } });
+            searchForm.addEventListener('submit', async (e) => { e.preventDefault(); const affId = page.querySelector('#search-aff-id-pc').value.trim(); if (!affId) return showMessage(searchMessageBox, 'Please enter an Aff ID to search.', 'error'); try { const partner = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first(); if (!partner) { promoListContainer.style.display = 'none'; return showMessage(searchMessageBox, 'No account found.', 'error'); } currentPartner = partner; userInfoSpan.textContent = partner.get('affId'); displayPromoCodes(partner.get('promoCodes')); } catch (error) { showMessage(searchMessageBox, 'An error occurred during search.', 'error'); } });
+            function displayPromoCodes(codes) { promoListUl.innerHTML = (codes && codes.length > 0) ? '' : '<li>No promo codes found.</li>'; if (codes) { codes.forEach(code => { const li = document.createElement('li'); li.innerHTML = `<span>${code}</span><button class="delete-btn" data-code="${code}"><i class="fas fa-trash-alt"></i></button>`; promoListUl.appendChild(li); }); } promoListContainer.style.display = 'block'; promoListUl.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete)); }
+            async function handleDelete(e) { const codeToDelete = e.currentTarget.getAttribute('data-code'); if (!currentPartner || !confirm(`Delete "${codeToDelete}"?`)) return; currentPartner.remove("promoCodes", codeToDelete); try { await currentPartner.save(); showMessage(searchMessageBox, `"${codeToDelete}" was deleted.`, 'success'); displayPromoCodes(currentPartner.get('promoCodes')); } catch (error) { showMessage(searchMessageBox, 'Failed to delete.', 'error'); } }
         }
-        
-        // --- 4. INITIALIZE ALL PAGES on load ---
         setupPartnersPage();
         setupDataControlPage();
         setupPromoCodesPage();
