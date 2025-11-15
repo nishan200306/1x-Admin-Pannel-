@@ -27,20 +27,15 @@
         h1, h2 { text-align: center; color: var(--dark-color); }
         h1 { margin-top: 0; margin-bottom: 25px; }
         h2 { font-size: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; }
+        h3 { font-size: 18px; color: #333; margin-top: 25px; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; position: relative; }
         label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; }
         input, select { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
         button { width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; background-color: var(--primary-color); color: #fff; }
         
-        /* =================================================================== */
-        /*   <<<<<<<<<<<<<< START: බොත්තම් සඳහා නිවැරදි කළ CSS >>>>>>>>>>>>>>>>>  */
-        /* =================================================================== */
-        .submit-btn, .action-row button { 
-            background-color: var(--primary-color); /* කොළ පාට වෙනුවට නිල් පාට යොදන ලදී */
+        .submit-btn, .action-row button, .btn { 
+            background-color: var(--primary-color);
         }
-        /* =================================================================== */
-        /*   <<<<<<<<<<<<<<<<<<<<<<<<<<<<< END >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   */
-        /* =================================================================== */
 
         .btn-secondary { background-color: #6c757d; }
         button:hover { opacity: 0.9; }
@@ -74,6 +69,12 @@
         .section:last-child { border-bottom: none; }
         .action-row { display: flex; align-items: center; gap: 10px; }
         .action-row select { width: 120px; } .action-row input { flex-grow: 1; }
+
+        #player-id-list-container-dc ul { list-style: none; padding: 0; margin-top: 15px; }
+        #player-id-list-container-dc li { display: flex; justify-content: space-between; align-items: center; background-color: #f8f9fa; padding: 10px 15px; border-radius: 5px; margin-bottom: 8px; border: 1px solid #e9ecef; }
+        .delete-player-id-btn { background: none; border: none; color: var(--danger-color); cursor: pointer; padding: 0 5px; font-size: 16px; width: auto; }
+        .delete-player-id-btn:hover { opacity: 0.7; }
+        
         @media (max-width: 768px) {
             body, main { padding: 0; }
             .container { padding: 20px 15px; box-shadow: none; border-radius: 0; min-height: calc(100vh - 120px); }
@@ -139,7 +140,30 @@
             <div class="container">
                 <h1>Admin Control Panel</h1>
                 <div class="search-section"><div class="form-group"><label for="aff-id-input-dc">Affiliate ID</label><input type="text" id="aff-id-input-dc" placeholder="Enter Aff ID to search"></div><button id="search-btn-dc" class="btn">Search User</button></div>
-                <div id="update-form-container-dc" style="display: none;"><div id="user-info-dc" class="message" style="background: none; color: var(--primary-color); font-weight: bold; font-size: 18px;"></div><div class="update-section"><div class="update-row"><label>Registrations</label><div class="action-row"><input type="number" id="registrations-input-dc" placeholder="Set new value"><button class="update-btn" data-field="registrations" data-input="registrations-input-dc">Update</button></div></div><div class="update-row"><label>Registrations with deposits</label><div class="action-row"><input type="number" id="reg-deposits-input-dc" placeholder="Set new value"><button class="update-btn" data-field="regWithDeposits" data-input="reg-deposits-input-dc">Update</button></div></div><div class="update-row"><label>Update Profit</label><div class="action-row"><select id="profit-op-select-dc"><option value="add">Add (+)</option><option value="subtract">Subtract (-)</option></select><input type="number" id="profit-amount-input-dc" placeholder="Amount"><button id="profit-update-btn-dc">Update</button></div></div></div></div>
+                <div id="update-form-container-dc" style="display: none;">
+                    <div id="user-info-dc" class="message" style="background: none; color: var(--primary-color); font-weight: bold; font-size: 18px;"></div>
+                    <div class="update-section">
+                        <div class="update-row"><label>Registrations</label><div class="action-row"><input type="number" id="registrations-input-dc" placeholder="Set new value"><button class="update-btn" data-field="registrations" data-input="registrations-input-dc">Update</button></div></div>
+                        <div class="update-row"><label>Registrations with deposits</label><div class="action-row"><input type="number" id="reg-deposits-input-dc" placeholder="Set new value"><button class="update-btn" data-field="regWithDeposits" data-input="reg-deposits-input-dc">Update</button></div></div>
+                        
+                        <!-- *** අලුතින් එකතු කළ කොටස් *** -->
+                        <div class="update-row"><label>Available to Withdraw ($)</label><div class="action-row"><input type="number" step="0.01" id="available-withdrawal-input-dc" placeholder="Set new value"><button class="update-btn" data-field="availableWithdrawal" data-input="available-withdrawal-input-dc">Update</button></div></div>
+                        <div class="update-row"><label>Yesterday Earnings ($)</label><div class="action-row"><input type="number" step="0.01" id="yesterday-earnings-input-dc" placeholder="Set new value"><button class="update-btn" data-field="yesterdayEarnings" data-input="yesterday-earnings-input-dc">Update</button></div></div>
+                        <!-- *************************** -->
+
+                        <div class="update-row"><label>Update Profit</label><div class="action-row"><select id="profit-op-select-dc"><option value="add">Add (+)</option><option value="subtract">Subtract (-)</option></select><input type="number" id="profit-amount-input-dc" placeholder="Amount"><button id="profit-update-btn-dc">Update</button></div></div>
+                    </div>
+                    
+                    <div class="update-section">
+                        <h3>Manage Player IDs</h3>
+                        <div class="action-row">
+                            <input type="text" id="player-id-input-dc" placeholder="Enter new Player ID">
+                            <button id="add-player-id-btn-dc" style="width: 150px;">Add Player ID</button>
+                        </div>
+                        <div id="player-id-list-container-dc" style="margin-top: 15px;"></div>
+                    </div>
+
+                </div>
                 <div id="status-message-dc" class="message"></div>
             </div>
         </div>
@@ -185,15 +209,99 @@
             closeModalBtn.onclick = () => { modal.style.display = 'none'; }; window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
             fetchAndRenderAccounts();
         }
+        
         function setupDataControlPage() {
             const page = document.getElementById('page-data-control'); if(!page) return;
-            let currentUserObjectId = null;
+            let currentUserObject = null;
             const searchBtn = page.querySelector('#search-btn-dc'), affIdInput = page.querySelector('#aff-id-input-dc'), updateFormContainer = page.querySelector('#update-form-container-dc'), userInfo = page.querySelector('#user-info-dc'), statusMessage = page.querySelector('#status-message-dc');
+            const addPlayerIdBtn = page.querySelector('#add-player-id-btn-dc'), playerIdInput = page.querySelector('#player-id-input-dc'), playerIdListContainer = page.querySelector('#player-id-list-container-dc');
+            
             const showStatus = (message, isError = false) => { statusMessage.textContent = message; statusMessage.className = `message ${isError ? 'error' : 'success'}`; statusMessage.style.display = 'block'; setTimeout(() => { statusMessage.style.display = 'none'; }, 4000); };
-            searchBtn.addEventListener('click', async () => { const affId = affIdInput.value.trim(); if (!affId) return showStatus("Please enter an Affiliate ID.", true); try { const user = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first(); if (user) { currentUserObjectId = user.id; userInfo.textContent = `Editing: ${user.get('firstName') || ''} (ID: ${user.get('affId')})`; userInfo.style.display = 'block'; page.querySelector('#registrations-input-dc').value = user.get('registrations') || 0; page.querySelector('#reg-deposits-input-dc').value = user.get('regWithDeposits') || 0; page.querySelector('#profit-amount-input-dc').value = ''; updateFormContainer.style.display = 'block'; showStatus("User found.", false); } else { updateFormContainer.style.display = 'none'; showStatus("No user found with that Affiliate ID.", true); } } catch (error) { showStatus("An error occurred during search.", true); } });
-            page.querySelectorAll('.update-btn').forEach(button => { button.addEventListener('click', async (e) => { if (!currentUserObjectId) return showStatus("Please search for a user first.", true); const field = e.target.getAttribute('data-field'); const value = parseFloat(page.querySelector(`#${e.target.getAttribute('data-input')}`).value); if (isNaN(value)) return showStatus("Please enter a valid number.", true); const account = new Parse.Object("PartnerAccount"); account.id = currentUserObjectId; account.set(field, value); try { await account.save(); showStatus(`'${field}' updated successfully!`, false); } catch (error) { showStatus(`Failed to update '${field}'.`, true); } }); });
-            page.querySelector('#profit-update-btn-dc').addEventListener('click', async () => { if (!currentUserObjectId) return showStatus("Please search for a user first.", true); let amount = parseFloat(page.querySelector('#profit-amount-input-dc').value); if (isNaN(amount)) return showStatus("Please enter a valid amount.", true); if (page.querySelector('#profit-op-select-dc').value === 'subtract') amount = -amount; const account = new Parse.Object("PartnerAccount"); account.id = currentUserObjectId; account.increment('profit', amount); try { await account.save(); showMessage(`Profit updated successfully!`, false); page.querySelector('#profit-amount-input-dc').value = ''; } catch (error) { showStatus(`Failed to update profit.`, true); } });
+            
+            function displayPlayerIds(ids) {
+                playerIdListContainer.innerHTML = '';
+                const ul = document.createElement('ul');
+                if (ids && ids.length > 0) {
+                    ids.forEach(id => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<span>${id}</span><button class="delete-player-id-btn" data-id="${id}"><i class="fas fa-trash-alt"></i></button>`;
+                        ul.appendChild(li);
+                    });
+                } else {
+                    ul.innerHTML = '<li>No Player IDs found for this account.</li>';
+                }
+                playerIdListContainer.appendChild(ul);
+            }
+
+            searchBtn.addEventListener('click', async () => { 
+                const affId = affIdInput.value.trim(); 
+                if (!affId) return showStatus("Please enter an Affiliate ID.", true); 
+                try { 
+                    const user = await new Parse.Query(PartnerAccount).equalTo("affId", affId).first(); 
+                    if (user) { 
+                        currentUserObject = user; 
+                        userInfo.textContent = `Editing: ${user.get('firstName') || ''} (ID: ${user.get('affId')})`; 
+                        userInfo.style.display = 'block'; 
+                        
+                        // *** අලුත් සහ පරණ සියලුම Fields වලට දත්ත ලබා දීම ***
+                        page.querySelector('#registrations-input-dc').value = user.get('registrations') || 0; 
+                        page.querySelector('#reg-deposits-input-dc').value = user.get('regWithDeposits') || 0; 
+                        page.querySelector('#available-withdrawal-input-dc').value = user.get('availableWithdrawal') || 0;
+                        page.querySelector('#yesterday-earnings-input-dc').value = user.get('yesterdayEarnings') || 0;
+                        page.querySelector('#profit-amount-input-dc').value = ''; 
+                        
+                        updateFormContainer.style.display = 'block'; 
+                        displayPlayerIds(user.get('playerIds'));
+                        showStatus("User found.", false); 
+                    } else { 
+                        updateFormContainer.style.display = 'none'; 
+                        currentUserObject = null;
+                        showStatus("No user found with that Affiliate ID.", true); 
+                    } 
+                } catch (error) { 
+                    showStatus("An error occurred during search.", true); 
+                } 
+            });
+
+            // මෙම function එක කිසිදු වෙනසක් නොමැතිව "Available to Withdraw" සහ "Yesterday" සඳහා ද ක්‍රියා කරයි.
+            page.querySelectorAll('.update-btn').forEach(button => { 
+                button.addEventListener('click', async (e) => { 
+                    if (!currentUserObject) return showStatus("Please search for a user first.", true); 
+                    const field = e.target.getAttribute('data-field'); 
+                    const value = parseFloat(page.querySelector(`#${e.target.getAttribute('data-input')}`).value); 
+                    if (isNaN(value)) return showStatus("Please enter a valid number.", true); 
+                    currentUserObject.set(field, value); 
+                    try { 
+                        await currentUserObject.save(); 
+                        showStatus(`'${field}' updated successfully!`, false); 
+                    } catch (error) { 
+                        showStatus(`Failed to update '${field}'.`, true); 
+                    } 
+                }); 
+            });
+            
+            page.querySelector('#profit-update-btn-dc').addEventListener('click', async () => { if (!currentUserObject) return showStatus("Please search for a user first.", true); let amount = parseFloat(page.querySelector('#profit-amount-input-dc').value); if (isNaN(amount)) return showStatus("Please enter a valid amount.", true); if (page.querySelector('#profit-op-select-dc').value === 'subtract') amount = -amount; currentUserObject.increment('profit', amount); try { await currentUserObject.save(); showStatus(`Profit updated successfully!`, false); page.querySelector('#profit-amount-input-dc').value = ''; } catch (error) { showStatus(`Failed to update profit.`, true); } });
+            
+            addPlayerIdBtn.addEventListener('click', async () => {
+                if (!currentUserObject) return showStatus("Please search for a user first.", true);
+                const newPlayerId = playerIdInput.value.trim();
+                if (!newPlayerId) return showStatus("Please enter a Player ID.", true);
+                currentUserObject.addUnique("playerIds", newPlayerId);
+                try { await currentUserObject.save(); showStatus(`Player ID "${newPlayerId}" added successfully!`, false); playerIdInput.value = ''; displayPlayerIds(currentUserObject.get('playerIds')); } catch (error) { showStatus(`Failed to add Player ID. Error: ${error.message}`, true); }
+            });
+
+            playerIdListContainer.addEventListener('click', async (e) => {
+                const deleteButton = e.target.closest('.delete-player-id-btn');
+                if (!deleteButton) return;
+                if (!currentUserObject) return showStatus("Current user not found.", true);
+                const idToDelete = deleteButton.getAttribute('data-id');
+                if (confirm(`Are you sure you want to delete Player ID: ${idToDelete}?`)) {
+                    currentUserObject.remove("playerIds", idToDelete);
+                    try { await currentUserObject.save(); showStatus(`Player ID "${idToDelete}" removed successfully.`, false); displayPlayerIds(currentUserObject.get('playerIds')); } catch (error) { showStatus(`Failed to remove Player ID. Error: ${error.message}`, true); }
+                }
+            });
         }
+
         function setupPromoCodesPage() {
             const page = document.getElementById('page-promo-codes'); if(!page) return;
             const addForm = page.querySelector('#add-promo-form'), searchForm = page.querySelector('#search-promo-form'), addMessageBox = page.querySelector('#add-message-box-pc'), searchMessageBox = page.querySelector('#search-message-box-pc'), promoListContainer = page.querySelector('#promo-list-container-pc'), promoListUl = page.querySelector('#promo-list-pc'), userInfoSpan = page.querySelector('#user-info-pc');
